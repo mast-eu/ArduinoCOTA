@@ -22,8 +22,17 @@
   https://docs.arduino.cc/built-in-examples/basics/Blink/
 */
 
+#include "Serial.h"
+#include "BuildInfo.h"
+
+
 // the setup function runs once when you press reset or power the board
 void setup() {
+  Serial.begin(9600);
+  delay(1000);
+  Serial.print("Running build number: ");
+  Serial.println(currentBuildNumber);
+
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
 }
