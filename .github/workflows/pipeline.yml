@@ -31,7 +31,7 @@ jobs:
           cat ./Blink/metadata.template.json
 
       - name: Build
-        uses: arduino/compile-sketches@v1   # https://github.com/arduino/compile-sketches#readme
+        uses: mast-eu/compile-sketches@v1   # https://github.com/arduino/compile-sketches#readme
         with:
           cli-compile-flags: |
             - --export-binaries
