@@ -10,8 +10,102 @@ env:
   METADATA_NAME: metadata.json
 
 jobs:
-  job_CI:
-    name: Continuous Integration
+  job_CI_U22:
+    name: Continuous Integration on Ubuntu 22.04
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7   # https://github.com/actions/checkout#readme
+
+      - name: Build preparation
+        run: |
+          echo "Updating BuildInfo.h"
+          sed -i "s,currentBuildNumber = 0,currentBuildNumber = ${{ github.run_number }}," ./Blink/BuildInfo.h
+          echo "... done:"
+          cat ./Blink/BuildInfo.h
+          echo ""
+          echo "Updating metadata.json"
+          sed -i "s,CI_BUILD_NUMBER,${{ github.run_number }}," ./Blink/metadata.template.json
+          sed -i "s,CI_FIRMWARE_URL,${{ env.FIRMWARE_URL }}," ./Blink/metadata.template.json
+          echo "... done:"
+          cat ./Blink/metadata.template.json
+
+      - name: Build
+        uses: mast-eu/compile-sketches@v1   # https://github.com/arduino/compile-sketches#readme
+        with:
+          cli-compile-flags: |
+            - --export-binaries
+          cli-version: latest
+          fqbn: 'arduino:renesas_uno:unor4wifi'
+          libraries: ''
+          sketch-paths: ./Blink/Blink.ino
+          verbose: true
+
+      - name: Build artifacts collection
+        run: |
+          mv ./Blink/metadata.template.json ./${{ env.METADATA_NAME }}
+          mv ./Blink/build/arduino.renesas_uno.unor4wifi/Blink.ino.hex ./${{ env.FIRMWARE_NAME }}
+
+      - name: Build artifacts upload
+        uses: actions/upload-artifact@v7   # https://github.com/actions/upload-artifact#readme
+        with:
+          name: ${{ env.ARTIFACTS_NAME }}
+          retention-days: 28
+          path: |
+            ./${{ env.METADATA_NAME }}
+            ./${{ env.FIRMWARE_NAME }}
+
+
+
+  job_CI_U24:
+    name: Continuous Integration on Ubuntu 24.04
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7   # https://github.com/actions/checkout#readme
+
+      - name: Build preparation
+        run: |
+          echo "Updating BuildInfo.h"
+          sed -i "s,currentBuildNumber = 0,currentBuildNumber = ${{ github.run_number }}," ./Blink/BuildInfo.h
+          echo "... done:"
+          cat ./Blink/BuildInfo.h
+          echo ""
+          echo "Updating metadata.json"
+          sed -i "s,CI_BUILD_NUMBER,${{ github.run_number }}," ./Blink/metadata.template.json
+          sed -i "s,CI_FIRMWARE_URL,${{ env.FIRMWARE_URL }}," ./Blink/metadata.template.json
+          echo "... done:"
+          cat ./Blink/metadata.template.json
+
+      - name: Build
+        uses: mast-eu/compile-sketches@v1   # https://github.com/arduino/compile-sketches#readme
+        with:
+          cli-compile-flags: |
+            - --export-binaries
+          cli-version: latest
+          fqbn: 'arduino:renesas_uno:unor4wifi'
+          libraries: ''
+          sketch-paths: ./Blink/Blink.ino
+          verbose: true
+
+      - name: Build artifacts collection
+        run: |
+          mv ./Blink/metadata.template.json ./${{ env.METADATA_NAME }}
+          mv ./Blink/build/arduino.renesas_uno.unor4wifi/Blink.ino.hex ./${{ env.FIRMWARE_NAME }}
+
+      - name: Build artifacts upload
+        uses: actions/upload-artifact@v7   # https://github.com/actions/upload-artifact#readme
+        with:
+          name: ${{ env.ARTIFACTS_NAME }}
+          retention-days: 28
+          path: |
+            ./${{ env.METADATA_NAME }}
+            ./${{ env.FIRMWARE_NAME }}
+
+
+
+  job_CI_U26:
+    name: Continuous Integration on Ubuntu 26.04
     runs-on: ubuntu-26.04
     steps:
       - name: Checkout
@@ -58,7 +152,7 @@ jobs:
 
   job_CD:
     name: Continuous Delivery
-    needs: job_CI
+    needs: job_CI_U26
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
