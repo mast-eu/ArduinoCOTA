@@ -31,7 +31,7 @@ jobs:
           cat ./Blink/metadata.template.json
 
       - name: Build
-        uses: mast-eu/compile-sketches@v1   # https://github.com/arduino/compile-sketches#readme
+        uses: arduino/compile-sketches@da13cc095a42a0c448e23951d3a946a09d8b0dd5
         with:
           cli-compile-flags: |
             - --export-binaries
@@ -78,7 +78,7 @@ jobs:
           cat ./Blink/metadata.template.json
 
       - name: Build
-        uses: mast-eu/compile-sketches@v1   # https://github.com/arduino/compile-sketches#readme
+        uses: arduino/compile-sketches@da13cc095a42a0c448e23951d3a946a09d8b0dd5
         with:
           cli-compile-flags: |
             - --export-binaries
@@ -125,7 +125,7 @@ jobs:
           cat ./Blink/metadata.template.json
 
       - name: Build
-        uses: mast-eu/compile-sketches@v1   # https://github.com/arduino/compile-sketches#readme
+        uses: arduino/compile-sketches@da13cc095a42a0c448e23951d3a946a09d8b0dd5
         with:
           cli-compile-flags: |
             - --export-binaries
